@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Pico y placa</string>
+    <string name="placa">Placa</string>
+    <string name="date">dia-mes-año</string>
+    <string name="hour">hora:minutos</string>
+    <string name="search">Verificar y buscar</string>
+    <string name="label_time_register">Fecha de registro</string>
+    <string name="empty_fields">Ingrese valores en los campos</string>
+    <string name="incorrect_licence_plate">Placa incorrecta</string>
+    <string name="not_circulate">No puede circular</string>
+    <string name="circulate">Puede circular</string>
+    <string name="dont_save">Datos no guardados</string>
+    <string name="contravention_positive">Contravención SI</string>
+    <string name="contravention_negative">Contravención: No</string>
+    <string name="add_new">Agregar nuevo</string>
+</resources>
