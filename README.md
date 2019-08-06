@@ -1,7 +1,8 @@
 # Pico y placa
 
-- Arquitectura MVVM con kotlin
+- Kotlin
+- Arquitectura MVVM
 - Corutinas
 - Persistencia de datos con Room
-- LiveData
--
+- ViewModel y LiveData
+- Recyclerview
