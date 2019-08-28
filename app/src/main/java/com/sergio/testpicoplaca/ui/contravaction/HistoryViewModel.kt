@@ -13,14 +13,14 @@ import kotlinx.coroutines.launch
 class HistoryViewModel (application: Application) : AndroidViewModel(application) {
 
     private var repository: ContraventionRepository
+    private val _allDataFilter = MutableLiveData<List<Contravention>>()
     val allData:LiveData<List<Contravention>>
-    val _allDataFilter = MutableLiveData<List<Contravention>>()
-    val allDataFilter:LiveData<List<Contravention>> get()= _allDataFilter
+    val allDataFilter:LiveData<List<Contravention>> get() = _allDataFilter
 
     init {
-        val contravactionDao = ContraventionDatabase.getAppDatabase(application).contravactionDao()
-        repository = ContraventionRepository(contravactionDao)
-        allData = repository.allContravaction
+        val contraventionDao = ContraventionDatabase.getAppDatabase(application).contraventionDao()
+        repository = ContraventionRepository(contraventionDao)
+        allData = repository.allContravention
     }
 
     fun insert(contravaction: Contravention) {

@@ -30,11 +30,17 @@ class AddNewActivity : AppCompatActivity() {
         val EXTRA_DATE="DATE"
         val EXTRA_CURRENT_TIME="CURRENT_TIME"
     }
-    var mDate = ""
-    var mTime  = ""
-    var isDeny = false
-    var dayOfWeek: Int?=null
-    private lateinit var viewModel: HistoryViewModel
+    private var mDate = ""
+    private var mTime  = ""
+    private var dayOfWeek: Int?=null
+
+    private var isDeny = false
+    private val viewModel: HistoryViewModel by lazy {
+        ViewModelProviders.of(this).get(
+            HistoryViewModel(
+                application
+            )::class.java)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,15 +55,12 @@ class AddNewActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        setTitle(getString(R.string.add_new))
+        title = getString(R.string.add_new)
         btnDate.setOnClickListener { showDatePicker(year,month,day) }
         btnHour.setOnClickListener { showTimePicker() }
         btnSearch.setOnClickListener { searchAndCalcCase() }
 
-        viewModel = ViewModelProviders.of(this).get(
-            HistoryViewModel(
-                application
-            )::class.java)
+
         viewModel.allDataFilter.observe(this, Observer {
             labelCount.text = it.size.toString()
         })
@@ -83,7 +86,7 @@ class AddNewActivity : AppCompatActivity() {
         DatePickerDialog(this, DatePickerDialog.OnDateSetListener { datePicker, year, monthOfYear, dayOfMonth ->
             mDate       = TimeHelper.getStyleDate(dayOfMonth,monthOfYear,year)
             dayOfWeek   = TimeHelper.getDayOfWeak(year, monthOfYear, dayOfMonth)
-            btnDate.setText(mDate)
+            btnDate.text = mDate
         },year,month,day)
         .show()
     }
@@ -96,7 +99,7 @@ class AddNewActivity : AppCompatActivity() {
 
         TimePickerDialog(this, TimePickerDialog.OnTimeSetListener{ view, h, m ->
             mTime = h.toString() + ":" + m
-            btnHour.setText(mTime)
+            btnHour.text = mTime
         },hour,minute,false)
         .show()
     }
@@ -109,29 +112,26 @@ class AddNewActivity : AppCompatActivity() {
     }
 
     private fun validateForm(): Boolean {
-        val licencePlate= inputLicensePlate.text.toString()
+        val licencePlate = inputLicensePlate.text.toString()
+        val licenceStr = licencePlate.substring(licencePlate.length-1)
         if(licencePlate.trim().isEmpty() || mDate.trim().isEmpty() || mTime.trim().isEmpty()){
             showSnackBar(R.string.empty_fields)
             return false
         }
-        val licenceStr = licencePlate.substring(licencePlate.length-1)
-        val licenceInt:Int? = licenceStr.toIntOrNull()
-
+        val licenceInt = licenceStr.toIntOrNull()
         if (licenceInt==null){
             showSnackBar(R.string.incorrect_licence_plate)
             return false
         }
 
-        if((TimeHelper.inMiddle(mTime,"7:00","9:30")) || (TimeHelper.inMiddle(mTime,"16:00","19:30"))) {
-            if(dayOfWeek!=null && licenceInt!=null){
-                isDeny = when(dayOfWeek){
-                    1-> { licenceInt in 1..2 }
-                    2-> { licenceInt in 3..4 }
-                    3-> { licenceInt in 5..6 }
-                    4-> { licenceInt in 7..8 }
-                    5-> { licenceInt==9 || licenceInt==0}
-                    else-> {false}
-                }
+        if((TimeHelper.inMiddle(mTime,"7:00","9:30")) || (TimeHelper.inMiddle(mTime,"16:00","19:30"))){
+            isDeny = when(dayOfWeek){
+                1-> { licenceInt in 1..2 }
+                2-> { licenceInt in 3..4 }
+                3-> { licenceInt in 5..6 }
+                4-> { licenceInt in 7..8 }
+                5-> { licenceInt==9 || licenceInt==0}
+                else -> false
             }
         }
         labelWarning.text = getString(if(isDeny) R.string.not_circulate else R.string.circulate)

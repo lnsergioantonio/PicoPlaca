@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [Contravention::class],version=1)
 abstract class ContraventionDatabase : RoomDatabase() {
-    abstract fun contravactionDao(): ContraventionDao
+    abstract fun contraventionDao(): ContraventionDao
 
     companion object {
         private val DATABASE_NAME = "contravaction_database"
